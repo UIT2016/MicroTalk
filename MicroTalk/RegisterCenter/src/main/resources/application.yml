@@ -1,0 +1,14 @@
+#配置eureka 服务注册 服务发现
+eureka:
+  instance:
+    hostname: center001 #   服务端实例名称
+  client:
+    register-with-eureka: false #    表示不向注册中心注册，服务端配置
+    fetchregistry: false #作为注册中心维护注册服务，不需要检索发现其他服务
+    service-url: http://${eureka.instance.hostname}:${server.port}/center001 #配置注册中心首页
+
+spring:
+  application:
+    name: center001
+server:
+  port: 8001
