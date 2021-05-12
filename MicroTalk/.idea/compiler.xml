@@ -7,7 +7,9 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="RegisterCenter" />
-        <module name="rpc" />
+        <module name="RPCRegisterCenter" />
+        <module name="RPCMonitor" />
+        <module name="RpcConsumer" />
       </profile>
     </annotationProcessing>
   </component>

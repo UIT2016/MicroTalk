@@ -10,7 +10,10 @@
     <name>MicroTalk</name>
     <modules>
         <module>RegisterCenter</module>
-        <module>rpc</module>
+        <module>RPCRegisterCenter</module>
+        <module>RPCMonitor</module>
+        <module>RpcProvider</module>
+        <module>RpcConsumer</module>
     </modules>
     <packaging>pom</packaging>
 
