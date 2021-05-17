@@ -18,6 +18,10 @@ public final class ZkConstants {
      服务在zk下的路径
      **/
     public static final String ZK_PARENTZNODEPATH = "/servers";
+    /**
+     * ZK_连接超时时间
+     */
+    public static final int ZK_CONNECTIONTIMEOUT= 2000;
 
 
 }

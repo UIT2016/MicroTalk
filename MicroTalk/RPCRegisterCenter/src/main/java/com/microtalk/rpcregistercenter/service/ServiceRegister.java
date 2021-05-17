@@ -19,6 +19,6 @@ public interface ServiceRegister {
   * @return
   *
   **/
-void register(String serviceName,String serviceAddress);
+void register(String serverName,String port);
 
 }
