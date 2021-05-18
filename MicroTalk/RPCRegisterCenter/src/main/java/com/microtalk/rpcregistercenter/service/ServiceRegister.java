@@ -7,16 +7,13 @@ package com.microtalk.rpcregistercenter.service;
  **/
 public interface ServiceRegister {
  /**
- *注册中心初始化
- * @param
- * @return
- *
+ * 注册中心初始化
  **/
  void init();
  /**
   *服务注册
-  * @param
-  * @return
+  * @param serverName server name
+  * @param port port
   *
   **/
 void register(String serverName,String port);

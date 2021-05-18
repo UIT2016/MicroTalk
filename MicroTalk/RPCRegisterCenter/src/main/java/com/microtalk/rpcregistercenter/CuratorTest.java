@@ -15,7 +15,7 @@ import java.util.List;
  * @description: curator客户端测试
  * @date 2021-05-13 13:57:28
  */
-public class curatortest {
+public class CuratorTest {
     public static void main(String[] args) throws Exception{
         CuratorFramework client = CuratorFrameworkFactory.newClient("121.5.158.55:2181", new RetryNTimes(10, 5000));
         client.start();// 连接
@@ -30,10 +30,6 @@ public class curatortest {
         // 设置节点数据
         client.setData().forPath("/test", "111".getBytes());
         client.setData().forPath("/test", "222".getBytes());
-        // 删除节点
-        //System.out.println(client.checkExists().forPath("/test"));
-        /*client.delete().withVersion(-1).forPath("/test");
-        System.out.println(client.checkExists().forPath("/test"));*/
         client.close();
         System.out.println("OK！");
 

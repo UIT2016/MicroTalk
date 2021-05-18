@@ -4,7 +4,7 @@ import com.microtalk.rpcregistercenter.service.ServiceRegister;
 import lombok.extern.slf4j.Slf4j;
 import org.I0Itec.zkclient.ZkClient;
 import org.apache.zookeeper.*;
-
+import org.springframework.beans.factory.annotation.Value;
 
 
 /**
@@ -16,18 +16,21 @@ import org.apache.zookeeper.*;
 public class ZkServiceRegister  implements ServiceRegister {
     private Watcher watcher;
 private ZkClient zk;
-
+@Value("${zookeeper.host}")
 private String zkHost;
+@Value("${zookeeper.sessiontimeout}")
 private int zkSessionTimeOut;
+@Value("${zookeeper.parentznodepath}")
 private String zkParentNodePath;
-private String zkConnectionTimeOut;
+@Value("${zookeeper.connectiontimeout}")
+private int zkConnectionTimeOut;
 
 
     @Override
     public void init() {
         //todo 以后再添加watcher机制
         log.info(">>>>>>zk初始化开始");
-        zk =new ZkClient(ZkConstants.ZK_HOST,ZkConstants.ZK_SESSIONTIMEOUT,ZkConstants.ZK_CONNECTIONTIMEOUT);
+        zk =new ZkClient(zkHost,zkSessionTimeOut,zkConnectionTimeOut);
         log.info(">>>>>>zk初始化成功");
     }
 /**
@@ -39,7 +42,7 @@ private String zkConnectionTimeOut;
     @Override
     public void register(String serverName, String serviceAddress) {
         //创建registry节点
-        String registryPath=ZkConstants.ZK_PARENTZNODEPATH;
+        String registryPath=zkParentNodePath;
         if(!zk.exists(registryPath)){
             zk.createPersistent(registryPath);
             log.info(">>>>>>创建zk节点"+registryPath);
