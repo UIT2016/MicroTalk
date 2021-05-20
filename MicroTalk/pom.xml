@@ -14,17 +14,52 @@
         <module>RPCMonitor</module>
         <module>RpcProvider</module>
         <module>RpcConsumer</module>
+        <module>RpcClient</module>
     </modules>
     <packaging>pom</packaging>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
         <junit.version>4.12</junit.version>
-        <log4j.version>1.2.17</log4j.version>
         <lombok.version>1.16.18</lombok.version>
     </properties>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.6.RELEASE</version>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.12</version>
+            <scope>provided</scope>
+        </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>2.3.7.RELEASE</version>
+                <scope>provided</scope>
+            </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- 修改后立即生效，热部署 -->
+        <!-- https://mvnrepository.com/artifact/org.springframework/springloaded -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>springloaded</artifactId>
+            <version>1.2.8.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+        </dependency>
+    </dependencies>
 
     <dependencyManagement>
         <dependencies>
@@ -36,21 +71,7 @@
                 <scope>import</scope>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>2.0.0.RELEASE</version>
-                <type>pom</type>
-                <scope>import</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-starter-logging</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
                 <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
-
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
@@ -62,24 +83,10 @@
                 <version>1.0.31</version>
             </dependency>
             <dependency>
-                <groupId>org.mybatis.spring.boot</groupId>
-                <artifactId>mybatis-spring-boot-starter</artifactId>
-                <version>1.3.0</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-core</artifactId>
-                <version>1.2.3</version>
-            </dependency>
-            <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
-            </dependency>
-            <dependency> <!-- 引入log4j2依赖 -->
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-log4j2</artifactId>
             </dependency>
             <dependency>
                 <groupId>commons-collections</groupId>
@@ -87,17 +94,11 @@
                 <version>3.2</version>
                 <scope>compile</scope>
             </dependency>
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>1.3.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.12</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
-
-
-
 </project>

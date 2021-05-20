@@ -9,13 +9,13 @@ public interface ServiceRegister {
  /**
  * 注册中心初始化
  **/
- void init();
+ void init() throws Exception;
  /**
   *服务注册
-  * @param serverName server name
-  * @param port port
+  * @param data server name
+
   *
   **/
-void register(String serverName,String port);
+
 
 }

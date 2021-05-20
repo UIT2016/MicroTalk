@@ -8,11 +8,8 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
-    <artifactId>RPCRegisterCenter</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <groupId>org.microtalk.rpcserver</groupId>
-
+    <groupId>org.microtalk.rpcclient</groupId>
+    <artifactId>RpcClient</artifactId>
     <dependencies>
 
         <!-- https://mvnrepository.com/artifact/org.apache.zookeeper/zookeeper -->
@@ -20,16 +17,6 @@
             <groupId>org.apache.zookeeper</groupId>
             <artifactId>zookeeper</artifactId>
             <version>3.4.6</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>slf4j-log4j12</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>log4j</artifactId>
-                    <groupId>log4j</groupId>
-                </exclusion>
-            </exclusions>
             <!--            排除log4j-->
         </dependency>
         <!--Apache Curator-->
@@ -39,6 +26,12 @@
             <version>2.12.0</version>
         </dependency>
         <!-- zkclient -->
+        <dependency>
+            <groupId>com.101tec</groupId>
+            <artifactId>zkclient</artifactId>
+            <version>0.9</version>
+            <!--            排除log4j-->
+        </dependency>
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>

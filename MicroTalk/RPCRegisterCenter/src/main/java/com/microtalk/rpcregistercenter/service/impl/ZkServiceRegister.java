@@ -1,11 +1,11 @@
 package com.microtalk.rpcregistercenter.service.impl;
-import com.microtalk.rpcregistercenter.common.constant.ZkConstants;
 import com.microtalk.rpcregistercenter.service.ServiceRegister;
 import lombok.extern.slf4j.Slf4j;
-import org.I0Itec.zkclient.ZkClient;
 import org.apache.zookeeper.*;
+import org.apache.zookeeper.data.Stat;
 import org.springframework.beans.factory.annotation.Value;
-
+import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * @author 812
@@ -13,50 +13,84 @@ import org.springframework.beans.factory.annotation.Value;
  * @date 2021-05-13 15:08:11
  */
 @Slf4j
-public class ZkServiceRegister  implements ServiceRegister {
-    private Watcher watcher;
-private ZkClient zk;
-@Value("${zookeeper.host}")
-private String zkHost;
-@Value("${zookeeper.sessiontimeout}")
-private int zkSessionTimeOut;
-@Value("${zookeeper.parentznodepath}")
-private String zkParentNodePath;
-@Value("${zookeeper.connectiontimeout}")
-private int zkConnectionTimeOut;
+public class ZkServiceRegister implements ServiceRegister {
 
+    private static String zkHost;
+    private static int zkSessionTimeOut;
+    private static String zkParentNodePath;
 
-    @Override
-    public void init() {
-        //todo 以后再添加watcher机制
-        log.info(">>>>>>zk初始化开始");
-        zk =new ZkClient(zkHost,zkSessionTimeOut,zkConnectionTimeOut);
-        log.info(">>>>>>zk初始化成功");
+    @Value("${zookeeper.host}")
+    public static void setZkHost(String zkHost) {
+        ZkServiceRegister.zkHost = zkHost;
     }
-/**
- * 向zookeeper中的/servers下创建子节点
- * @param
- * @return
- *
- **/
-    @Override
-    public void register(String serverName, String serviceAddress) {
-        //创建registry节点
-        String registryPath=zkParentNodePath;
-        if(!zk.exists(registryPath)){
-            zk.createPersistent(registryPath);
-            log.info(">>>>>>创建zk节点"+registryPath);
-        }
-        //创建service节点
-        String servicePath=registryPath+"/"+serverName;
-        if (!zk.exists(servicePath)) {
-            zk.createPersistent(servicePath);
-           log.info(">>>服务注册:" + servicePath);
-        }
-        //创建临时address节点
-        String addressPath=servicePath+"/address-";
-        String addressNode=zk.createEphemeralSequential(addressPath,serviceAddress);
-        log.info(">>>>>>创建address临时节点");
+    @Value("${zookeeper.sessiontimeout}")
+    public static void setZkSessionTimeOut(int zkSessionTimeOut) {
+        ZkServiceRegister.zkSessionTimeOut = zkSessionTimeOut;
+    }
+    @Value("${zookeeper.parentznodepath}")
+    public static void setZkParentNodePath(String zkParentNodePath) {
+        ZkServiceRegister.zkParentNodePath = zkParentNodePath;
+    }
 
+    private static final CountDownLatch latch = new CountDownLatch(1);
+
+
+    /**
+     * 连接 zookeeper 服务器
+     *
+     * @return Zookeeper
+     */
+    private static ZooKeeper connectServer() {
+        ZooKeeper zk = null;
+        try {
+            zk = new ZooKeeper(zkHost, zkSessionTimeOut, new Watcher() {
+                @Override
+                public void process(WatchedEvent event) {
+                    if (event.getState() == Event.KeeperState.SyncConnected) {
+                        latch.countDown();
+                    }
+                }
+            });
+            latch.await();
+        } catch (IOException | InterruptedException e) {
+            log.error(new Throwable().getStackTrace()[0].getClassName()+"出现异常>>>>>", e);
+        }
+        return zk;
+    }
+
+    /**
+     * 创建节点
+     *
+     * @param zk
+     * @param data
+     */
+    private static  void createNode(ZooKeeper zk, String data) {
+        try {
+            byte[] bytes = data.getBytes();
+            Stat exits=zk.exists(zkParentNodePath,false);
+            if(exits==null){
+                String path = zk.create(zkParentNodePath, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+                log.debug("create zookeeper parent node ({} => {})", path, data);
+            }
+            String path = zk.create(zkParentNodePath+"/child", bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
+            log.debug("create zookeeper child node ({} => {})", path, data);
+            log.info(">>>>服务注册成功");
+        } catch (KeeperException | InterruptedException e) {
+            log.error("", e);
+        }
+    }
+
+    @Override
+    public void init() throws Exception {
+
+    }
+
+    public static void register(String data) {
+        if (data != null) {
+            ZooKeeper zk = connectServer();
+            if (zk != null) {
+                createNode(zk, data);
+            }
+        }
     }
 }
