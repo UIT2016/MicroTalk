@@ -13,8 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @Slf4j
 public class RpcRegisterCenterApp {
-    public static void main(String[] args) throws Exception {
-
+    public static void main(String[] args)  {
         SpringApplication.run(RpcRegisterCenterApp.class, args);
         log.info(">>>>>>>srpingboot start");
     }

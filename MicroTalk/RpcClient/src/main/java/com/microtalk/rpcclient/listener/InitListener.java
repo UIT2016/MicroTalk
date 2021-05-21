@@ -1,5 +1,6 @@
 package com.microtalk.rpcclient.listener;
 
+import com.microtalk.rpcclient.common.loadbalance.LoadBalance;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
@@ -69,7 +70,7 @@ static{
                 System.out.println("host："+host);
                 newServiceList.add(host);
             }
-            //LoadBalanse.SERVICE_LIST = newServiceList;
+            LoadBalance.SERVICE_LIST = newServiceList;
         } catch (Exception e) {
             e.printStackTrace();
         }

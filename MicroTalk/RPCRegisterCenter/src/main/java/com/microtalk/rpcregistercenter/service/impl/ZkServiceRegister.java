@@ -86,6 +86,7 @@ public class ZkServiceRegister implements ServiceRegister {
     }
 
     public static void register(String data) {
+        log.info(">>>>>>>>服务端注册节点，地址:{}",data);
         if (data != null) {
             ZooKeeper zk = connectServer();
             if (zk != null) {
@@ -93,4 +94,5 @@ public class ZkServiceRegister implements ServiceRegister {
             }
         }
     }
+
 }

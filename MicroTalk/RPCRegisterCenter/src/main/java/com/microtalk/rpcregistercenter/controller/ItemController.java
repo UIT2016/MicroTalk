@@ -19,9 +19,9 @@ import java.util.Map;
  * @date 2021-05-19 16:17:08
  */
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/item")
 public class ItemController {
-    @RequestMapping(value="/product",method = RequestMethod.GET,produces ="application/json",consumes = "application/json")
+    @RequestMapping(value="/item",method = RequestMethod.GET,produces ="application/json",consumes = "application/json")
     @ResponseBody
     public String getProduct(){
         Map<Object, Object> map=new HashMap<>();
