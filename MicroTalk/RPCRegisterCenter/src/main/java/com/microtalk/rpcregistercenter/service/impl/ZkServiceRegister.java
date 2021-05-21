@@ -1,10 +1,14 @@
 package com.microtalk.rpcregistercenter.service.impl;
+import com.microtalk.rpcregistercenter.listener.InitListener;
 import com.microtalk.rpcregistercenter.service.ServiceRegister;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.Stat;
 import org.springframework.beans.factory.annotation.Value;
+
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -18,20 +22,17 @@ public class ZkServiceRegister implements ServiceRegister {
     private static String zkHost;
     private static int zkSessionTimeOut;
     private static String zkParentNodePath;
-
-    @Value("${zookeeper.host}")
-    public static void setZkHost(String zkHost) {
-        ZkServiceRegister.zkHost = zkHost;
+static {
+    Properties properties = new Properties();
+    try {
+        properties.load(ZkServiceRegister.class.getClassLoader().getResourceAsStream("application.properties"));
+    } catch (IOException e) {
+        log.error(">>>>>>异常", e);
     }
-    @Value("${zookeeper.sessiontimeout}")
-    public static void setZkSessionTimeOut(int zkSessionTimeOut) {
-        ZkServiceRegister.zkSessionTimeOut = zkSessionTimeOut;
-    }
-    @Value("${zookeeper.parentznodepath}")
-    public static void setZkParentNodePath(String zkParentNodePath) {
-        ZkServiceRegister.zkParentNodePath = zkParentNodePath;
-    }
-
+    zkParentNodePath = properties.getProperty("zk.parentnodepath");
+    zkSessionTimeOut = Integer.parseInt(properties.getProperty("zk.sessiontimeout"));
+    zkHost = properties.getProperty("zk.host");
+}
     private static final CountDownLatch latch = new CountDownLatch(1);
 
 
@@ -43,6 +44,7 @@ public class ZkServiceRegister implements ServiceRegister {
     private static ZooKeeper connectServer() {
         ZooKeeper zk = null;
         try {
+            log.info(">>>>>>>zookeepr地址：{}",zkHost);
             zk = new ZooKeeper(zkHost, zkSessionTimeOut, new Watcher() {
                 @Override
                 public void process(WatchedEvent event) {

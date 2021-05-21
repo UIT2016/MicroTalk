@@ -24,7 +24,6 @@ import java.util.Properties;
 @Slf4j
 @WebListener
 public class InitListener implements ServletContextListener {
-    private static String BASE_SERVICE ;
 
     private static String SERVICE_NAME ;
 
@@ -34,12 +33,12 @@ public class InitListener implements ServletContextListener {
 static{
     Properties properties = new Properties();
     try {
-        properties.load(new FileInputStream("classpath:ZkContent.properties"));
+        properties.load(InitListener.class.getClassLoader().getResourceAsStream("ZkContext.properties"));
     } catch (IOException e) {
         log.error(">>>>>>",e);
     }
-    BASE_SERVICE=properties.getProperty("zookeeper.basename");
-    SERVICE_NAME=properties.getProperty("zookeeper.servicename");
+
+    SERVICE_NAME=properties.getProperty("zk.servicename");
     zKHost=properties.getProperty("zk.host");
 }
 
@@ -50,7 +49,7 @@ static{
     public void init(){
         try {
             zooKeeper = new ZooKeeper(zKHost,5000, (watchedEvent -> {
-                if(watchedEvent.getType()== Watcher.Event.EventType.NodeChildrenChanged && watchedEvent.getPath().equals(BASE_SERVICE+SERVICE_NAME)){
+                if(watchedEvent.getType()== Watcher.Event.EventType.NodeChildrenChanged && watchedEvent.getPath().equals(SERVICE_NAME)){
                     updateServerList();
                 }
             }));
@@ -63,9 +62,9 @@ static{
     public void updateServerList(){
         List<String> newServiceList = new ArrayList<>();
         try {
-            List <String> children = zooKeeper.getChildren(BASE_SERVICE+SERVICE_NAME,true);
+            List <String> children = zooKeeper.getChildren(SERVICE_NAME,true);
             for(String subNode:children){
-                byte [] data = zooKeeper.getData(BASE_SERVICE + SERVICE_NAME +"/" + subNode,false,null);
+                byte [] data = zooKeeper.getData( SERVICE_NAME +"/" + subNode,false,null);
                 String host = new String(data,"utf-8");
                 System.out.println("host："+host);
                 newServiceList.add(host);
