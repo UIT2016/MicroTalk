@@ -3,6 +3,7 @@ package com.microtalk.rpcclient.controller;
 import com.alibaba.fastjson.JSON;
 import com.microtalk.rpcclient.common.loadbalance.LoadBalance;
 import com.microtalk.rpcclient.common.loadbalance.impl.RandomLoadBalance;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,6 +19,7 @@ import java.util.Map;
  * @date 2021-05-21 15:19:02
  */
 @RestController
+@Slf4j
 @RequestMapping("/items")
 public class ItemController {
 
@@ -32,6 +34,7 @@ public class ItemController {
         Map res = (Map) restTemplate.getForEntity("http://" + host + "/product/getProduct", Map.class, Map.class);
         Map<String, Object> map = new HashMap(1);
         map.put("host", host);
+
         return JSON.toJSONString(map);
     }
 
